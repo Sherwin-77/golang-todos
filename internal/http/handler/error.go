@@ -9,7 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/labstack/echo/v4"
-	"github.com/sherwin-77/go-echo-template/pkg/response"
+	"github.com/sherwin-77/golang-todos/pkg/response"
 )
 
 func extractColumnNameFromDetail(detail string) string {

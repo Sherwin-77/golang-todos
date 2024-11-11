@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	"github.com/sherwin-77/go-echo-template/configs"
+	"github.com/sherwin-77/golang-todos/configs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

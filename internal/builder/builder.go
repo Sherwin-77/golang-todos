@@ -2,14 +2,14 @@ package builder
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/sherwin-77/go-echo-template/configs"
-	"github.com/sherwin-77/go-echo-template/internal/http/handler"
-	"github.com/sherwin-77/go-echo-template/internal/http/middlewares"
-	"github.com/sherwin-77/go-echo-template/internal/http/router"
-	"github.com/sherwin-77/go-echo-template/internal/repository"
-	"github.com/sherwin-77/go-echo-template/internal/service"
-	"github.com/sherwin-77/go-echo-template/pkg/caches"
-	"github.com/sherwin-77/go-echo-template/pkg/tokens"
+	"github.com/sherwin-77/golang-todos/configs"
+	"github.com/sherwin-77/golang-todos/internal/http/handler"
+	"github.com/sherwin-77/golang-todos/internal/http/middlewares"
+	"github.com/sherwin-77/golang-todos/internal/http/router"
+	"github.com/sherwin-77/golang-todos/internal/repository"
+	"github.com/sherwin-77/golang-todos/internal/service"
+	"github.com/sherwin-77/golang-todos/pkg/caches"
+	"github.com/sherwin-77/golang-todos/pkg/tokens"
 	"gorm.io/gorm"
 )
 

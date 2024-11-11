@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/sherwin-77/go-echo-template/internal/entity"
+	"github.com/sherwin-77/golang-todos/internal/entity"
 	"gorm.io/gorm"
 )
 

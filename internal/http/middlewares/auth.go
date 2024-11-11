@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/sherwin-77/go-echo-template/configs"
+	"github.com/sherwin-77/golang-todos/configs"
 	"gorm.io/gorm"
 )
 

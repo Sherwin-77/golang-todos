@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	entity "github.com/sherwin-77/go-echo-template/internal/entity"
+	entity "github.com/sherwin-77/golang-todos/internal/entity"
 	gomock "go.uber.org/mock/gomock"
 	gorm "gorm.io/gorm"
 )

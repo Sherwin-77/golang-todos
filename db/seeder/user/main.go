@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/sherwin-77/go-echo-template/configs"
-	"github.com/sherwin-77/go-echo-template/internal/entity"
-	"github.com/sherwin-77/go-echo-template/pkg/database"
+	"github.com/sherwin-77/golang-todos/configs"
+	"github.com/sherwin-77/golang-todos/internal/entity"
+	"github.com/sherwin-77/golang-todos/pkg/database"
 	"golang.org/x/crypto/bcrypt"
 )
 

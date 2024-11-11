@@ -12,7 +12,7 @@ package mock_tokens
 import (
 	reflect "reflect"
 
-	tokens "github.com/sherwin-77/go-echo-template/pkg/tokens"
+	tokens "github.com/sherwin-77/golang-todos/pkg/tokens"
 	gomock "go.uber.org/mock/gomock"
 )
 

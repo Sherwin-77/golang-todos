@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/sherwin-77/go-echo-template/internal/entity"
-	"github.com/sherwin-77/go-echo-template/internal/http/dto"
-	"github.com/sherwin-77/go-echo-template/internal/repository"
-	"github.com/sherwin-77/go-echo-template/pkg/caches"
+	"github.com/sherwin-77/golang-todos/internal/entity"
+	"github.com/sherwin-77/golang-todos/internal/http/dto"
+	"github.com/sherwin-77/golang-todos/internal/repository"
+	"github.com/sherwin-77/golang-todos/pkg/caches"
 )
 
 type RoleService interface {

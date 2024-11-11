@@ -8,11 +8,11 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/sherwin-77/go-echo-template/internal/entity"
-	"github.com/sherwin-77/go-echo-template/internal/http/dto"
-	"github.com/sherwin-77/go-echo-template/internal/repository"
-	"github.com/sherwin-77/go-echo-template/pkg/caches"
-	"github.com/sherwin-77/go-echo-template/pkg/tokens"
+	"github.com/sherwin-77/golang-todos/internal/entity"
+	"github.com/sherwin-77/golang-todos/internal/http/dto"
+	"github.com/sherwin-77/golang-todos/internal/repository"
+	"github.com/sherwin-77/golang-todos/pkg/caches"
+	"github.com/sherwin-77/golang-todos/pkg/tokens"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )

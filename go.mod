@@ -1,4 +1,4 @@
-module github.com/sherwin-77/go-echo-template
+module github.com/sherwin-77/golang-todos
 
 go 1.23.1
 

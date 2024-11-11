@@ -1,6 +1,6 @@
 package handler
 
-import "github.com/sherwin-77/go-echo-template/internal/service"
+import "github.com/sherwin-77/golang-todos/internal/service"
 
 type RoleHandler struct {
 	RoleService service.RoleService

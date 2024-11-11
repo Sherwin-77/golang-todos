@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/sherwin-77/go-echo-template/configs"
+	"github.com/sherwin-77/golang-todos/configs"
 )
 
 func InitRedis(config configs.RedisConfig) *redis.Client {

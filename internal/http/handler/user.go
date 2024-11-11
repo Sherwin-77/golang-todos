@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/sherwin-77/go-echo-template/internal/http/dto"
-	"github.com/sherwin-77/go-echo-template/internal/service"
-	"github.com/sherwin-77/go-echo-template/pkg/response"
+	"github.com/sherwin-77/golang-todos/internal/http/dto"
+	"github.com/sherwin-77/golang-todos/internal/service"
+	"github.com/sherwin-77/golang-todos/pkg/response"
 )
 
 type UserHandler struct {

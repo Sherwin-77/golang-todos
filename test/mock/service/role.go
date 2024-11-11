@@ -13,8 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	entity "github.com/sherwin-77/go-echo-template/internal/entity"
-	dto "github.com/sherwin-77/go-echo-template/internal/http/dto"
+	entity "github.com/sherwin-77/golang-todos/internal/entity"
+	dto "github.com/sherwin-77/golang-todos/internal/http/dto"
 	gomock "go.uber.org/mock/gomock"
 )
 
