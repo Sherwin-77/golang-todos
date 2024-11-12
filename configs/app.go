@@ -44,7 +44,7 @@ func GetConfig() *Config {
 			Port:     os.Getenv("POSTGRES_PORT"),
 			User:     os.Getenv("POSTGRES_USER"),
 			Password: os.Getenv("POSTGRES_PASSWORD"),
-			Database: os.Getenv("POSTGRES_DATABASE"),
+			Database: os.Getenv("POSTGRES_DB"),
 		},
 		Redis: RedisConfig{
 			Host:     os.Getenv("REDIS_HOST"),

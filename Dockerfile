@@ -17,4 +17,6 @@ WORKDIR /app
 COPY --from=builder /app/golang-server .
 COPY --from=builder /app/.env .
 
+EXPOSE 8080
+
 CMD ["./golang-server"]
