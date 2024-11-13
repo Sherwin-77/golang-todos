@@ -41,7 +41,7 @@ func main() {
 
 func runServer(s *server.Server, config *configs.Config) {
 	go func() {
-		if err := s.Start(fmt.Sprintf("localhost:%s", config.Port)); err != nil {
+		if err := s.Start(fmt.Sprintf("0.0.0.0:%s", config.Port)); err != nil {
 			s.Logger.Fatal(err)
 		}
 	}()
