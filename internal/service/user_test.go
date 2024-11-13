@@ -484,3 +484,114 @@ func (s *UserTestSuite) TestLogin() {
 		s.NotEmpty(result)
 	})
 }
+
+func (s *UserTestSuite) TestRegister() {
+	userReq := dto.UserRequest{
+		Username: "admin",
+		Email:    "admin@example.com",
+		Password: "secret",
+	}
+
+	s.Run("Failed to get users", func() {
+		errorTest := errors.New("get users error")
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return(nil, errorTest)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.ErrorIs(err, errorTest)
+		s.Nil(user)
+		s.False(isFirstUser)
+	})
+
+	s.Run("Failed to create user", func() {
+		errorTest := errors.New("create user error")
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return([]entity.User{}, nil)
+			s.repo.EXPECT().CreateUser(gomock.Any(), gomock.Any(), gomock.Any()).Return(errorTest)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.ErrorIs(err, errorTest)
+		s.Nil(user)
+		s.False(isFirstUser)
+	})
+
+	s.Run("Failed to get roles", func() {
+		errorTest := errors.New("get roles error")
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return([]entity.User{}, nil)
+			s.repo.EXPECT().CreateUser(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+			s.roleRepo.EXPECT().GetRolesFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "auth_level >= 3").Return(nil, errorTest)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.ErrorIs(err, errorTest)
+		s.Nil(user)
+		s.True(isFirstUser)
+	})
+
+	s.Run("Failed to create role", func() {
+		errorTest := errors.New("create role error")
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return([]entity.User{}, nil)
+			s.repo.EXPECT().CreateUser(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+			s.roleRepo.EXPECT().GetRolesFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "auth_level >= 3").Return([]entity.Role{}, nil)
+			s.roleRepo.EXPECT().CreateRole(gomock.Any(), gomock.Any(), gomock.Any()).Return(errorTest)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.ErrorIs(err, errorTest)
+		s.Nil(user)
+		s.True(isFirstUser)
+	})
+
+	s.Run("Failed to add role", func() {
+		errorTest := errors.New("add role error")
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return([]entity.User{}, nil)
+			s.repo.EXPECT().CreateUser(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+			s.roleRepo.EXPECT().GetRolesFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "auth_level >= 3").Return([]entity.Role{
+				{Name: "admin"},
+			}, nil)
+			s.repo.EXPECT().AddRoles(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(errorTest)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.ErrorIs(err, errorTest)
+		s.Nil(user)
+		s.True(isFirstUser)
+	})
+
+	s.Run("Register successfully", func() {
+		s.repo.EXPECT().WithTransaction(gomock.Any()).DoAndReturn(func(f func(tx *gorm.DB) error) error {
+			s.repo.EXPECT().GetUsersFiltered(gomock.Any(), gomock.Any(), 1, 0, "id", "email != ?", userReq.Email).Return([]entity.User{
+				{Email: userReq.Email},
+			}, nil)
+			s.repo.EXPECT().CreateUser(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+
+			return f(&gorm.DB{})
+		})
+
+		user, isFirstUser, err := s.userService.Register(context.Background(), userReq)
+
+		s.NoError(err)
+		s.NotNil(user)
+		s.False(isFirstUser)
+	})
+}

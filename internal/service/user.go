@@ -24,6 +24,7 @@ type UserService interface {
 	UpdateUser(ctx context.Context, request dto.UpdateUserRequest) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	Login(ctx context.Context, request dto.LoginRequest) (string, error)
+	Register(ctx context.Context, request dto.UserRequest) (*entity.User, bool, error)
 	ChangeRole(ctx context.Context, request dto.ChangeRoleRequest) error
 }
 
@@ -234,4 +235,55 @@ func (s *userService) Login(ctx context.Context, request dto.LoginRequest) (stri
 	}
 
 	return token, nil
+}
+
+func (s *userService) Register(ctx context.Context, request dto.UserRequest) (*entity.User, bool, error) {
+	user := &entity.User{
+		Username: request.Username,
+		Email:    request.Email,
+	}
+	var isFirstUser bool
+	if err := s.userRepository.WithTransaction(func(tx *gorm.DB) error {
+		users, err := s.userRepository.GetUsersFiltered(ctx, tx, 1, 0, "id", "email != ?", request.Email)
+		if err != nil {
+			return err
+		}
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		user.Password = string(hashedPassword)
+		if err := s.userRepository.CreateUser(ctx, tx, user); err != nil {
+			return err
+		}
+		if len(users) == 0 {
+			isFirstUser = true
+			roles, err := s.roleRepository.GetRolesFiltered(ctx, tx, 1, 0, "id", "auth_level >= 3")
+			if err != nil {
+				return err
+			}
+			var role *entity.Role
+			if len(roles) == 0 {
+				role = &entity.Role{
+					Name:      "Admin",
+					AuthLevel: 3,
+				}
+				if err := s.roleRepository.CreateRole(ctx, tx, role); err != nil {
+					return err
+				}
+			} else {
+				role = &roles[0]
+			}
+
+			if err := s.userRepository.AddRoles(ctx, tx, user, []*entity.Role{role}); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return nil, isFirstUser, err
+	}
+
+	return user, isFirstUser, nil
 }

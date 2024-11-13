@@ -56,13 +56,16 @@ func (h *UserHandler) CreateUser(ctx echo.Context) error {
 		return err
 	}
 
-	user, err := h.userService.CreateUser(ctx.Request().Context(), req)
+	user, isFirstUser, err := h.userService.Register(ctx.Request().Context(), req)
 
 	if err != nil {
 		return err
 	}
-
-	return ctx.JSON(http.StatusCreated, response.NewResponse(http.StatusCreated, "User Created", user, nil))
+	msg := "User Created"
+	if isFirstUser {
+		msg += ". Because this is the first user, admin role has been assigned"
+	}
+	return ctx.JSON(http.StatusCreated, response.NewResponse(http.StatusCreated, msg, user, nil))
 }
 
 func (h *UserHandler) UpdateUser(ctx echo.Context) error {

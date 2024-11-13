@@ -157,6 +157,26 @@ func (mr *MockUserRepositoryMockRecorder) GetUsers(ctx, tx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsers", reflect.TypeOf((*MockUserRepository)(nil).GetUsers), ctx, tx)
 }
 
+// GetUsersFiltered mocks base method.
+func (m *MockUserRepository) GetUsersFiltered(ctx context.Context, tx *gorm.DB, limit, offset int, order, query any, args ...any) ([]entity.User, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, tx, limit, offset, order, query}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetUsersFiltered", varargs...)
+	ret0, _ := ret[0].([]entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUsersFiltered indicates an expected call of GetUsersFiltered.
+func (mr *MockUserRepositoryMockRecorder) GetUsersFiltered(ctx, tx, limit, offset, order, query any, args ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, tx, limit, offset, order, query}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersFiltered", reflect.TypeOf((*MockUserRepository)(nil).GetUsersFiltered), varargs...)
+}
+
 // RemoveRoles mocks base method.
 func (m *MockUserRepository) RemoveRoles(ctx context.Context, tx *gorm.DB, user *entity.User, roles []*entity.Role) error {
 	m.ctrl.T.Helper()

@@ -128,6 +128,26 @@ func (mr *MockRoleRepositoryMockRecorder) GetRoles(ctx, tx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoles", reflect.TypeOf((*MockRoleRepository)(nil).GetRoles), ctx, tx)
 }
 
+// GetRolesFiltered mocks base method.
+func (m *MockRoleRepository) GetRolesFiltered(ctx context.Context, tx *gorm.DB, limit, offset int, order, query any, args ...any) ([]entity.Role, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, tx, limit, offset, order, query}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetRolesFiltered", varargs...)
+	ret0, _ := ret[0].([]entity.Role)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRolesFiltered indicates an expected call of GetRolesFiltered.
+func (mr *MockRoleRepositoryMockRecorder) GetRolesFiltered(ctx, tx, limit, offset, order, query any, args ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, tx, limit, offset, order, query}, args...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRolesFiltered", reflect.TypeOf((*MockRoleRepository)(nil).GetRolesFiltered), varargs...)
+}
+
 // Rollback mocks base method.
 func (m *MockRoleRepository) Rollback(tx *gorm.DB) {
 	m.ctrl.T.Helper()

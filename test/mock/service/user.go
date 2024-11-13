@@ -130,6 +130,22 @@ func (mr *MockUserServiceMockRecorder) Login(ctx, request any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUserService)(nil).Login), ctx, request)
 }
 
+// Register mocks base method.
+func (m *MockUserService) Register(ctx context.Context, request dto.UserRequest) (*entity.User, bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Register", ctx, request)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(bool)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// Register indicates an expected call of Register.
+func (mr *MockUserServiceMockRecorder) Register(ctx, request any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUserService)(nil).Register), ctx, request)
+}
+
 // UpdateUser mocks base method.
 func (m *MockUserService) UpdateUser(ctx context.Context, request dto.UpdateUserRequest) (*entity.User, error) {
 	m.ctrl.T.Helper()

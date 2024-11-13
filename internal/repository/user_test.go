@@ -74,6 +74,32 @@ func (s *UserTestSuite) TestGetUsers() {
 	})
 }
 
+func (s *UserTestSuite) TestGetUsersFiltered() {
+	userID := uuid.NewString()
+
+	s.Run("Failed to get users", func() {
+		s.mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "users" WHERE id != $1 ORDER BY id LIMIT $2 OFFSET $3`)).
+			WithArgs(userID, 1, 1).
+			WillReturnError(gorm.ErrRecordNotFound)
+
+		result, err := s.repo.GetUsersFiltered(context.Background(), s.db, 1, 1, "id", "id != ?", userID)
+		s.ErrorAs(err, &gorm.ErrRecordNotFound)
+		s.Nil(result)
+	})
+
+	s.Run("Get users successfully", func() {
+		s.mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "users" WHERE id != $1 ORDER BY id LIMIT $2 OFFSET $3`)).
+			WithArgs(userID, 1, 1).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "username", "password"}).
+				AddRow(userID, "admin", "password").
+				AddRow(userID, "editor", "password"))
+
+		result, err := s.repo.GetUsersFiltered(context.Background(), s.db, 1, 1, "id", "id != ?", userID)
+		s.Nil(err)
+		s.Len(result, 2)
+	})
+}
+
 func (s *UserTestSuite) TestGetUserByID() {
 	s.Run("User not found", func() {
 		id := uuid.NewString()

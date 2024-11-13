@@ -10,6 +10,7 @@ import (
 type RoleRepository interface {
 	BaseRepository
 	GetRoles(ctx context.Context, tx *gorm.DB) ([]entity.Role, error)
+	GetRolesFiltered(ctx context.Context, tx *gorm.DB, limit int, offset int, order interface{}, query interface{}, args ...interface{}) ([]entity.Role, error)
 	GetRoleByID(ctx context.Context, tx *gorm.DB, id string) (*entity.Role, error)
 	CreateRole(ctx context.Context, tx *gorm.DB, role *entity.Role) error
 	UpdateRole(ctx context.Context, tx *gorm.DB, role *entity.Role) error
@@ -28,6 +29,16 @@ func (r *roleRepository) GetRoles(ctx context.Context, tx *gorm.DB) ([]entity.Ro
 	var roles []entity.Role
 
 	if err := tx.WithContext(ctx).Find(&roles).Error; err != nil {
+		return nil, err
+	}
+
+	return roles, nil
+}
+
+func (r *roleRepository) GetRolesFiltered(ctx context.Context, tx *gorm.DB, limit int, offset int, order interface{}, query interface{}, args ...interface{}) ([]entity.Role, error) {
+	var roles []entity.Role
+
+	if err := tx.WithContext(ctx).Where(query, args...).Limit(limit).Offset(offset).Order(order).Find(&roles).Error; err != nil {
 		return nil, err
 	}
 

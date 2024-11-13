@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sherwin-77/golang-todos/internal/entity"
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 type UserRepository interface {
 	BaseRepository
 	GetUsers(ctx context.Context, tx *gorm.DB) ([]entity.User, error)
+	GetUsersFiltered(ctx context.Context, tx *gorm.DB, limit int, offset int, order interface{}, query interface{}, args ...interface{}) ([]entity.User, error)
 	GetUserByID(ctx context.Context, tx *gorm.DB, id string) (*entity.User, error)
 	GetUserByEmail(ctx context.Context, tx *gorm.DB, email string) (*entity.User, error)
 	CreateUser(ctx context.Context, tx *gorm.DB, user *entity.User) error
@@ -30,6 +32,16 @@ func (r *userRepository) GetUsers(ctx context.Context, tx *gorm.DB) ([]entity.Us
 	var users []entity.User
 
 	if err := tx.WithContext(ctx).Find(&users).Error; err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (r *userRepository) GetUsersFiltered(ctx context.Context, tx *gorm.DB, limit int, offset int, order interface{}, query interface{}, args ...interface{}) ([]entity.User, error) {
+	var users []entity.User
+
+	if err := tx.WithContext(ctx).Where(query, args...).Limit(limit).Offset(offset).Order(order).Find(&users).Error; err != nil {
 		return nil, err
 	}
 
@@ -81,7 +93,8 @@ func (r *userRepository) DeleteUser(ctx context.Context, tx *gorm.DB, user *enti
 }
 
 func (r *userRepository) AddRoles(ctx context.Context, tx *gorm.DB, user *entity.User, roles []*entity.Role) error {
-	if err := tx.WithContext(ctx).Model(user).Association("Roles").Append(roles); err != nil {
+	fmt.Println(roles)
+	if err := tx.WithContext(ctx).Model(&user).Association("Roles").Append(roles); err != nil {
 		return err
 	}
 
@@ -89,7 +102,7 @@ func (r *userRepository) AddRoles(ctx context.Context, tx *gorm.DB, user *entity
 }
 
 func (r *userRepository) RemoveRoles(ctx context.Context, tx *gorm.DB, user *entity.User, roles []*entity.Role) error {
-	if err := tx.WithContext(ctx).Model(user).Association("Roles").Delete(roles); err != nil {
+	if err := tx.WithContext(ctx).Model(&user).Association("Roles").Delete(roles); err != nil {
 		return err
 	}
 
