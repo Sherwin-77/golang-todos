@@ -38,6 +38,53 @@ func UserRoutes(userHandler handler.UserHandler, middlware middlewares.Middlewar
 	return routes, middlewareFuncs
 }
 
+func TodoRoutes(todoHandler handler.TodoHandler, middleware middlewares.Middleware, authMiddleware middlewares.AuthMiddleware) ([]route.Route, []echo.MiddlewareFunc) {
+	routes := []route.Route{
+		{
+			Method:      http.MethodGet,
+			Path:        "/todos",
+			Handler:     todoHandler.GetTodosByUserID,
+			Middlewares: []echo.MiddlewareFunc{},
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/todos/:id",
+			Handler: todoHandler.GetTodoByID,
+			Middlewares: []echo.MiddlewareFunc{
+				middleware.ValidateUUID([]string{"id"}),
+			},
+		},
+		{
+			Method:      http.MethodPost,
+			Path:        "/todos",
+			Handler:     todoHandler.CreateTodo,
+			Middlewares: []echo.MiddlewareFunc{},
+		},
+		{
+			Method:  http.MethodPatch,
+			Path:    "/todos/:id",
+			Handler: todoHandler.UpdateTodo,
+			Middlewares: []echo.MiddlewareFunc{
+				middleware.ValidateUUID([]string{"id"}),
+			},
+		},
+		{
+			Method:  http.MethodDelete,
+			Path:    "/todos/:id",
+			Handler: todoHandler.DeleteTodo,
+			Middlewares: []echo.MiddlewareFunc{
+				middleware.ValidateUUID([]string{"id"}),
+			},
+		},
+	}
+
+	middlewareFuncs := []echo.MiddlewareFunc{
+		authMiddleware.Authenticated,
+	}
+
+	return routes, middlewareFuncs
+}
+
 func AdminUserRoutes(userHandler handler.UserHandler, middleware middlewares.Middleware, authMiddleware middlewares.AuthMiddleware) ([]route.Route, []echo.MiddlewareFunc) {
 	routes := []route.Route{
 		{

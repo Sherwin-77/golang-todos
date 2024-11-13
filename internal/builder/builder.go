@@ -23,18 +23,27 @@ func BuildV1Routes(config *configs.Config, db *gorm.DB, cache caches.Cache, grou
 	// Initialize repositories
 	userRepository := repository.NewUserRepository(db)
 	roleRepository := repository.NewRoleRepository(db)
+	todoRepository := repository.NewTodoRepository(db)
 
 	// Initialize services
 	tokenService := tokens.NewTokenService(config.JWTSecret)
 	userService := service.NewUserService(tokenService, userRepository, roleRepository, cache)
+	todoService := service.NewTodoService(todoRepository, userRepository, cache)
 
 	// Initialize handlers
 	userHandler := handler.NewUserHandler(userService)
+	todoHandler := handler.NewTodoHandler(todoService)
 
 	// Register routes
-	routes, middlewares := router.UserRoutes(*userHandler, *middleware, *authMiddleware)
-	for _, route := range routes {
-		m := append(middlewares, route.Middlewares...)
+	userRoutes, userMiddlewares := router.UserRoutes(*userHandler, *middleware, *authMiddleware)
+	for _, route := range userRoutes {
+		m := append(userMiddlewares, route.Middlewares...)
+		g.Add(route.Method, route.Path, route.Handler, m...)
+	}
+
+	todoRoutes, todoMiddlewares := router.TodoRoutes(*todoHandler, *middleware, *authMiddleware)
+	for _, route := range todoRoutes {
+		m := append(todoMiddlewares, route.Middlewares...)
 		g.Add(route.Method, route.Path, route.Handler, m...)
 	}
 
